@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Главная страница</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<p>
+    <span style="text-align: left" th:text="'Привет, '+${username}+', вы вошли как '+${role}+'!'"></span>
+</p>
+<form style="text-align: left" method="post" action="/logout">
+    <input type="submit" value="Выйти">
+</form>
+<h2 style="text-align: center">Список пользователей</h2>
+<hr>
+<p style="text-align:center;" th:text="${message}"/>
+<table style="margin-left: auto;margin-right: auto;width: 500px">
+    <tr>
+        <th>ID</th>
+        <th>Логин</th>
+        <th>Пароль</th>
+        <th>Роль</th>
+        <th>Действие</th>
+    </tr>
+        <tr  th:each="user : ${users}">
+            <td style="text-align: center" th:text="${user.id}"></td>
+            <td style="text-align: center" th:text="${user.username}"></td>
+            <td style="text-align: center" th:text="${user.password}"></td>
+            <td style="text-align: center" th:text="${user.authorities}"></td>
+            <td style="text-align: center">
+                <form>
+                    <input type="hidden" name="id" value="id" th:value="${user.id}">
+                    <input type="submit" value="Удалить" formmethod="post" formaction="/admin/del">
+                    <input type="submit" value="Редактировать" formmethod="get" formaction="/admin/updt">
+                </form>
+            </td>
+        </tr>
+    </c:forEach></table>
+<form style="text-align: center" method="get" action="/admin/add">
+    <input type="submit" value="Добавить">
+</form>
+</body>
+</html>

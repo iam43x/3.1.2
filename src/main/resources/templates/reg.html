@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Страница регистрации</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1 style="text-align: center">Регистрация</h1>
+<hr>
+<form style="text-align: center" method="post" action="/reg">
+    <label for="login">Логин:</label>
+    <input id="login" type="text" name="username">
+    <label for="password">Пароль:</label>
+    <input id="password" type="password" name="password">
+    <input type="submit" value="Регистрация">
+</form>
+
+<form style="text-align: center" method="get" action="/">
+    <input type="submit" value="Назад">
+</form>
+</body>
+</html>

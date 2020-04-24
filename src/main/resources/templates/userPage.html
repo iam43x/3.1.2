@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Главная страница</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h1>
+    <span style="text-align: center" th:text="'Привет, '+${username}+', вы вошли как '+${role}+'!'"/>
+</h1>
+<form method="post" action="/logout">
+    <input type="submit" value="Выйти">
+</form>
+</body>
+</html>

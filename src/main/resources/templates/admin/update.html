@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Главная страница</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body th:v>
+<h1 style="text-align: center">Изменить информацию о пользователе</h1>
+<hr>
+<form style="text-align: center;word-spacing: 7px" method="post">
+    <label for="id">ID:</label>
+    <input readonly id="id" name="id" value="id" th:value="${user.getId()}">
+    <label for="login">Логин:</label>
+    <input id="login" type="text" name="username" value="Username" th:value="${user.username}">
+    <label for="password">Пароль:</label>
+    <input id="password" type="password" name="password" value="pass" th:value="${user.password}">
+    <label for="role">Права:</label>
+    <input id="role" type="checkbox" name="role" value="ADMIN">Admin</input>
+    <input type="checkbox" name="role" value="USER" checked>User</input>
+    <input type="submit" value="Сохранить" formaction="/admin/updt">
+</form>
+<p>
+    <span style="text-align:center;" th:text="${message}"></span>
+</p>
+<form style="text-align: center" method="get" action="/admin">
+    <input type="submit" value="Назад">
+</form>
+</body>
+</html>
