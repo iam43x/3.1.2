@@ -71,12 +71,12 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
         transactionManager.setSessionFactory(getSessionFactory().getObject());
         return transactionManager;
     }
-//
-//    @Override
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler("/templates/**").addResourceLocations("/templates/");
-//    }
-//
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/templates/");
+    }
+
     @Override
     public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
                 this.applicationContext=applicationContext;

@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Главная страница</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Login page</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="icon" th:href="@{favicon.png}">
+    <link th:href="@{css/style.css}" rel="stylesheet">
 </head>
-<body>
-<h1 style="text-align: center">Войдите</h1>
-<hr>
-<p style="text-align: center" th:text="${message}"/>
-<form style="text-align: center;word-spacing: 6px" method="post" action="/login">
-    <label for="login">Логин:</label>
-    <input id="login" type="text" name="username">
-    <label for="password">Пароль:</label>
-    <input id="password" type="password" name="password">
-    <input type="submit" value="Войти">
+<body class="text-center sigin">
+<form class="form-signin" method="post" action="/login">
+    <h1 class="h3 mb-3 font-weight-normal"><b>Please sign in</b></h1>
+    <label for="login" class="sr-only">Login:</label>
+    <input id="login" type="text" name="username" class="form-control" placeholder="Email address" required autofocus>
+    <label for="password" class="sr-only">Password:</label>
+    <input id="password"  class="form-control" placeholder="Password" required autofocus type="password" name="password">
+    <button  class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 </form>
 <p></p>
-<form style="text-align: center" method="get" action="/reg">
-    <input type="submit" value="Регистрация">
-</form>
-
 </body>
 </html>

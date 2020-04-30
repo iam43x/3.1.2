@@ -25,39 +25,17 @@ public class AdminController {
     @GetMapping("/admin")
     public String getPanel(ModelMap modelMap, Authentication authentication) {
         User user=(User)authentication.getPrincipal();
-        modelMap.addAttribute("username", user.getUsername());
-        modelMap.addAttribute("role", user.getAuthorities());
+        modelMap.addAttribute("user", user);
         modelMap.addAttribute("users", userService.getAllUsers());
         return "admin/panel";
     }
 
-    @GetMapping("add")
-    public String addUser() {
-        return "admin/create";
-    }
-
-    @GetMapping("updt")
-    public String getUpdate(WebRequest request, ModelMap model) {
-        try {
-            User user = userService.getUserById(Long.parseLong(request.getParameter("id")));
-            if (user != null) {
-                model.addAttribute("user", user);
-            }
-        } catch (Exception e) {
-            model.addAttribute("message", "User Not Found:(");
-        }
-        return "admin/update";
-    }
-
-    @PostMapping("updt")
-    public String updateUser(WebRequest request, ModelMap modelMap,Authentication authentication) {
+    @PostMapping("update")
+    public String updateUser(WebRequest request) {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String[] role = request.getParameterValues("role");
         Set<Role> roles = new HashSet<>();
-        User user=(User)authentication.getPrincipal();
-        modelMap.addAttribute("username", user.getUsername());
-        modelMap.addAttribute("role", user.getAuthorities());
         for(int i=0;i<role.length;i++){
            if(role[i].equals("ADMIN")){
                roles.add(Role.ADMIN);
@@ -76,25 +54,18 @@ public class AdminController {
                     accountNonExpired(true).
                     build();
             userService.updateUser(newUser);
-            modelMap.addAttribute("message", "User was Update!");
-            modelMap.addAttribute("users",userService.getAllUsers());
         } catch (Exception e) {
             e.printStackTrace();
-            modelMap.addAttribute("message", "User not Update:(");
-            modelMap.addAttribute("users",userService.getAllUsers());
         }
-        return "admin/panel";
+        return "redirect:/admin";
     }
 
     @PostMapping("add")
-    public String addUser(WebRequest request, ModelMap modelMap, Authentication authentication) {
+    public String addUser(WebRequest request) {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String[] role = request.getParameterValues("role");
         Set<Role> roles = new HashSet<>();
-        User user=(User)authentication.getPrincipal();
-        modelMap.addAttribute("username", user.getUsername());
-        modelMap.addAttribute("role", user.getAuthorities());
         for(int i=0;i<role.length;i++){
             if(role[i].equals("ADMIN")){
                 roles.add(Role.ADMIN);
@@ -111,31 +82,21 @@ public class AdminController {
                     enabled(true).
                     build();
             userService.addUser(newUser);
-            modelMap.addAttribute("message", "User was Create!");
-            modelMap.addAttribute("users",userService.getAllUsers());
         } catch (Exception e) {
             e.printStackTrace();
-            modelMap.addAttribute("message", "User not Create:(");
-            modelMap.addAttribute("users",userService.getAllUsers());
         }
-        return "admin/panel";
+        return "redirect:/admin";
     }
 
     @PostMapping("del")
-    public String deleteUser(WebRequest request, ModelMap modelMap,Authentication authentication) {
-        User user=(User)authentication.getPrincipal();
-        modelMap.addAttribute("username", user.getUsername());
-        modelMap.addAttribute("role", user.getAuthorities());
+    public String deleteUser(WebRequest request) {
         try {
             Long id = Long.parseLong(request.getParameter("id"));
             userService.deleteUser(id);
-            modelMap.addAttribute("message","User with ID:"+id+" delete!");
-            modelMap.addAttribute("users",userService.getAllUsers());
         } catch (Exception e) {
-            modelMap.addAttribute("message", "User Not Found:(");
-            modelMap.addAttribute("users",userService.getAllUsers());
+            e.printStackTrace();
         }
-        return "admin/panel";
+        return "redirect:/admin";
 
     }
 }

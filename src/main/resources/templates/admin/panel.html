@@ -1,43 +1,238 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:background-color="http://www.w3.org/1999/xhtml">
 <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <title>Главная страница</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link th:href="@{css/style.css}" rel="stylesheet">
+    <link rel="icon" th:href="@{favicon.png}">
 </head>
 <body>
-<p>
-    <span style="text-align: left" th:text="'Привет, '+${username}+', вы вошли как '+${role}+'!'"></span>
-</p>
-<form style="text-align: left" method="post" action="/logout">
-    <input type="submit" value="Выйти">
-</form>
-<h2 style="text-align: center">Список пользователей</h2>
-<hr>
-<p style="text-align:center;" th:text="${message}"/>
-<table style="margin-left: auto;margin-right: auto;width: 500px">
-    <tr>
-        <th>ID</th>
-        <th>Логин</th>
-        <th>Пароль</th>
-        <th>Роль</th>
-        <th>Действие</th>
-    </tr>
-        <tr  th:each="user : ${users}">
-            <td style="text-align: center" th:text="${user.id}"></td>
-            <td style="text-align: center" th:text="${user.username}"></td>
-            <td style="text-align: center" th:text="${user.password}"></td>
-            <td style="text-align: center" th:text="${user.authorities}"></td>
-            <td style="text-align: center">
-                <form>
-                    <input type="hidden" name="id" value="id" th:value="${user.id}">
-                    <input type="submit" value="Удалить" formmethod="post" formaction="/admin/del">
-                    <input type="submit" value="Редактировать" formmethod="get" formaction="/admin/updt">
-                </form>
-            </td>
-        </tr>
-    </c:forEach></table>
-<form style="text-align: center" method="get" action="/admin/add">
-    <input type="submit" value="Добавить">
-</form>
+<nav class="navbar navbar-dark bg-dark">
+    <span class="text-white"
+          th:utext="'Привет,<strong>'+${user.username}+'</strong>, вы вошли как <strong>'+ ${user.authorities} +'</strong>!'"></span>
+    <div th:insert="logout"></div>
+</nav>
+<div class="row">
+
+    <div class="nav flex-column nav-pills container col-xl-2" id="v-pills-tab" role="tablist"
+         aria-orientation="vertical">
+        <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#admin" role="tab"
+           aria-controls="v-pills-home" aria-selected="true">Admin</a>
+        <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#user" role="tab"
+           aria-controls="v-pills-profile" aria-selected="false">User</a>
+    </div>
+    <div class="tab-content container col-xl-10" style="background-color: #F8F9FA;" id="v-pills-tabContent">
+        <div class="tab-pane fade show active" id="admin" role="tabpanel" aria-labelledby="v-pills-home-tab">
+            <h2 class="text-xl-left mt-2">Admin panel</h2>
+            <ul class="nav nav-tabs ">
+                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#all-users">Users table</a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#new-user">New User</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="all-users" class="tab-pane fade show active">
+                    <table class="table">
+                        <tr>
+                            <thead class="thead-light">
+                            <th>All users</th>
+                            </thead>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Email</th>
+                                        <th>Password</th>
+                                        <th>Role</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="user : ${users}">
+                                        <td th:text="${user.id}"></td>
+                                        <td th:text="${user.username}"></td>
+                                        <td th:text="${user.password}"></td>
+                                        <td th:text="${user.authorities}"></td>
+                                        <td>
+                                            <button type="submit" class="btn btn-info" data-toggle="modal"
+                                                    th:data-target="'#modal-edit-'+${user.id}">Edit
+                                            </button>
+                                            <div class="modal fade" th:id="'modal-edit-'+${user.id}" tabindex="-1"
+                                                 role="dialog" aria-labelledby="modal-edit" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="modaledit">Edit User</h5>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form class="text-center" method="post"
+                                                                  action="/admin/update">
+                                                                <p><label for="id">ID:</label></p>
+                                                                <p><input disabled="disabled" id="id" name="id"
+                                                                          th:value="${user.id}"></p>
+                                                                <p><input type="hidden" name="id"
+                                                                          th:value="${user.id}"></p>
+                                                                <p><label for="edit-login">Email:</label></p>
+                                                                <p><input id="edit-login" type="text" name="username"
+                                                                          th:value="${user.username}">
+                                                                </p>
+                                                                <p><label for="edit-password">Password:</label></p>
+                                                                <p><input id="edit-password" type="password"
+                                                                          name="password"
+                                                                          th:value="${user.password}"></p>
+                                                                <p><label for="edit-role">Role:</label></p>
+                                                                <p><input id="edit-role" type="checkbox" name="role"
+                                                                          value="ADMIN">Admin</input></p>
+                                                                <p><input type="checkbox" name="role" value="USER"
+                                                                          checked>User</input></p>
+                                                                <div class="float-right">
+                                                                    <button data-dismiss="modal"
+                                                                            class="btn btn-secondary">Close
+                                                                    </button>
+                                                                    <button type="submit" class="btn btn-primary">Edit
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button type="submit" class="btn btn-danger" data-toggle="modal"
+                                                    th:data-target="'#modal-delete'+${user.id}">Delete
+                                            </button>
+                                            <div class="modal fade" th:id="'modal-delete'+${user.id}" tabindex="-1"
+                                                 role="dialog" aria-labelledby="modal-delete" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h6 class="modal-title" id="modeldelete">Delete User</h6>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form class="text-center" method="post" action="/admin/del">
+                                                                <p><label for="id">ID:</label></p>
+                                                                <p><input disabled="disabled" id="delete-id" name="id"
+                                                                          value="id" th:value="${user.id}"></p>
+                                                                <p><input type="hidden" name="id"
+                                                                          value="id" th:value="${user.id}"></p>
+                                                                <p><label for="delete-login">Email:</label></p>
+                                                                <p><input disabled="disabled" id="delete-login"
+                                                                          type="text" name="username" value="Username"
+                                                                          th:value="${user.username}"></p>
+                                                                <p><label for="delete-password">Password:</label></p>
+                                                                <p><input disabled="disabled" id="delete-password"
+                                                                          type="password" name="password" value="pass"
+                                                                          th:value="${user.password}"></p>
+                                                                <p><label for="delete-role">Role:</label></p>
+                                                                <p><input disabled="disabled" id="delete-role"
+                                                                          type="checkbox" name="role" value="ADMIN">Admin</input>
+                                                                </p>
+                                                                <p><input disabled="disabled" type="checkbox"
+                                                                          name="role" value="USER" checked>User</input>
+                                                                </p>
+                                                                <div class="float-right">
+                                                                    <button data-dismiss="modal"
+                                                                            class="btn btn-secondary">Close
+                                                                    </button>
+                                                                    <button type="submit" class="btn btn-danger">
+                                                                        Delete
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="new-user" class="tab-pane fade">
+                    <table class="table">
+                        <tr>
+                            <thead class="thead-light">
+                            <th>Add new User</th>
+                            </thead>
+                        </tr>
+                        <tr>
+                            <td>
+                                <form style="text-align: center" method="post" action="/admin/add">
+                                    <label for="login">Логин:</label>
+                                    <input id="login" type="text" name="username">
+                                    <label for="password">Пароль:</label>
+                                    <input id="password" type="password" name="password">
+                                    <label for="role">Права:</label>
+                                    <input id="role" type="checkbox" name="role" value="ADMIN">Admin</input>
+                                    <input type="checkbox" name="role" value="USER" checked>User</input>
+                                    <button type="submit" class="btn btn-success">Add new User</button>
+                                </form>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        <div class="tab-pane fade" id="user" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+            <h2 class="text-xl-left mt-2">User information-page</h2>
+
+            <table class="table">
+                <tr>
+                    <thead class="thead-light">
+                    <th>About User</th>
+                    </thead>
+                </tr>
+                <tr>
+                    <td>
+                        <table class="table table-striped ">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Email</th>
+                                <th>Password</th>
+                                <th>Role</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="table-active">
+                                <td th:text="${user.id}"></td>
+                                <td th:text="${user.username}"></td>
+                                <td th:text="${user.password}"></td>
+                                <td th:text="${user.authorities}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 </body>
 </html>

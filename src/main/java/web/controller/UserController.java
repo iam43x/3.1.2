@@ -64,8 +64,7 @@ public class UserController {
     @GetMapping(value = "/user")
     public String User(ModelMap modelMap, Authentication authentication) {
         User user=(User)authentication.getPrincipal();
-        modelMap.addAttribute("username",user.getUsername());
-        modelMap.addAttribute("role",user.getAuthorities());
+        modelMap.addAttribute("user",user);
         return "userPage";
     }
 
